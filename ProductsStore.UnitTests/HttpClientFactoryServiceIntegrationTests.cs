@@ -38,17 +38,17 @@ namespace ProductsStore.IntegrationTests
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(myConfiguration)
                 .Build();
+            var webHostBuilder =
+                new WebHostBuilder()
+                .UseEnvironment("Test")
+                .UseStartup<Startup>()
+                .UseSerilog().UseConfiguration(configuration);
 
             // Act
-            var webHostBuilder =
-            new WebHostBuilder()
-            .UseEnvironment("Test") // You can set the environment you want (development, staging, production)
-            .UseStartup<Startup>()
-            .UseSerilog().UseConfiguration(configuration); // Startup class of your web app project
-
             using var server = new TestServer(webHostBuilder);
             using var client = server.CreateClient();
             var response = await client.GetAsync(request.Url);
+
             // Assert
             response.EnsureSuccessStatusCode();
         }
@@ -70,7 +70,8 @@ namespace ProductsStore.IntegrationTests
             var service = new HttpClientFactoryService(factory);
             var result = await service.Execute<Product>(url);
 
-            // Assert that product with id 1 is returned
+            // Assert
+            // product with id 1 is returned
             Assert.IsTrue(result != null && result.Id == 1);
         }
 
@@ -91,7 +92,8 @@ namespace ProductsStore.IntegrationTests
             var service = new HttpClientFactoryService(factory);
             var result = await service.Execute<IEnumerable<Product>>(url);
 
-            // Assert that list of products are returned
+            // Assert
+            // list of products are returned
             Assert.IsTrue(result != null && result.Count() > 0);
         }
     }
