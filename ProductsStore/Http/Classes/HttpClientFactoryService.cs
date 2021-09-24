@@ -14,7 +14,7 @@ namespace ProductsStore.Http.Classes
             _httpClientFactory = httpClientFactory;
         }
 
-        private async Task<T> GetCompaniesWithHttpClientFactory<T>(string url)
+        private async Task<T> GetProductsWithHttpClientFactory<T>(string url)
         {
             var httpClient = _httpClientFactory.CreateClient();
 
@@ -23,14 +23,14 @@ namespace ProductsStore.Http.Classes
 
             var stream = response.Content.ReadAsStringAsync().Result;
 
-            var companies = JsonConvert.DeserializeObject<T>(stream);
-            return companies;
+            var products = JsonConvert.DeserializeObject<T>(stream);
+            return products;
 
         }
 
         public async Task<T> Execute<T>(string url)
         {
-            return await GetCompaniesWithHttpClientFactory<T>(url);
+            return await GetProductsWithHttpClientFactory<T>(url);
         }
     }
 }
